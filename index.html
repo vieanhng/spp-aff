@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopee Affiliate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: { preflight: true },
+            theme: {
+                extend: {
+                    colors: {
+                        gray: {
+                            50: '#f9fafb',
+                            100: '#f3f4f6',
+                            200: '#e5e7eb',
+                            300: '#d1d5db',
+                            400: '#9ca3af',
+                            500: '#6b7280',
+                            600: '#4b5563',
+                            700: '#374151',
+                            800: '#1f2937',
+                            900: '#111827'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['system-ui', '-apple-system', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #111827;
+        }
+
+        .transition-all {
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen p-4 md:p-6 max-w-2xl mx-auto">
+    <div class="text-center mb-8">
+        <h1 class="text-xl font-semibold tracking-tight">Tạo Link Tiếp Thị Shopee</h1>
+    </div>
+
+    <div class="space-y-5">
+        <!-- Product URL -->
+        <div>
+            <label for="productUrl" class="block text-xs font-medium text-gray-700 mb-1">Link sản phẩm Shopee</label>
+            <input type="url" id="productUrl" placeholder="https://shopee.vn/product/..."
+                class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-black" />
+        </div>
+
+        <!-- Affiliate ID Collapsible -->
+        <div>
+            <button id="toggleAffiliate" class="block w-full text-left text-xs font-medium text-gray-700 mb-1">
+                Affiliate ID
+            </button>
+            <div id="affiliateInput" class="hidden mt-1">
+                <input type="text" id="affiliateId" value="17310100001"
+                    class="w-full px-3 py-2.5 text-sm font-mono border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-black" />
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex gap-2 pt-2">
+            <button id="generateBtn"
+                class="flex-1 py-2.5 text-sm font-medium bg-black text-white rounded hover:bg-gray-800 transition-all">
+                Tạo link
+            </button>
+            <button id="resetBtn"
+                class="px-4 py-2.5 text-sm font-medium text-gray-600 border border-gray-200 rounded hover:bg-gray-50 transition-all">
+                Xóa
+            </button>
+        </div>
+    </div>
+
+    <!-- Result -->
+    <div id="resultSection" class="hidden mt-6">
+        <div class="mb-3">
+            <input type="text" id="resultLink" readonly
+                class="w-full px-3 py-2.5 text-sm font-mono bg-gray-50 border border-gray-200 rounded" />
+        </div>
+        <div class="flex gap-2">
+            <button id="copyBtn"
+                class="flex-1 py-2.5 text-sm font-medium border border-gray-300 rounded hover:bg-gray-50 transition-all">
+                Sao chép
+            </button>
+            <button id="visitBtn"
+                class="flex-1 py-2.5 text-sm font-medium bg-black text-white rounded hover:bg-gray-800 transition-all">
+                Truy cập
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const productUrlInput = document.getElementById('productUrl');
+            const affiliateIdInput = document.getElementById('affiliateId');
+            const toggleBtn = document.getElementById('toggleAffiliate');
+            const affiliateInput = document.getElementById('affiliateInput');
+            const generateBtn = document.getElementById('generateBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const resultSection = document.getElementById('resultSection');
+            const resultLink = document.getElementById('resultLink');
+            const copyBtn = document.getElementById('copyBtn');
+            const visitBtn = document.getElementById('visitBtn');
+
+            let isOpen = false;
+            toggleBtn.addEventListener('click', () => {
+                isOpen = !isOpen;
+                affiliateInput.classList.toggle('hidden');
+                toggleBtn.textContent = isOpen ? 'Affiliate ID ▼' : 'Affiliate ID';
+            });
+
+            generateBtn.addEventListener('click', () => {
+                const url = productUrlInput.value.trim();
+                if (!url) {
+                    alert('Vui lòng nhập link sản phẩm Shopee.');
+                    return;
+                }
+
+                const valid = ['shopee.vn', 'shopee.sg', 'shopee.co.id', 'shopee.ph', 'shopee.th', 'shopee.com.my'];
+                if (!valid.some(d => url.includes(d))) {
+                    alert('Link phải từ Shopee (shopee.vn, shopee.sg, v.v.)');
+                    return;
+                }
+
+                const affId = affiliateIdInput.value.trim() || '17310100001';
+                const encoded = encodeURIComponent(url);
+                resultLink.value = `https://s.shopee.vn/an_redir?origin_link=${encoded}&affiliate_id=${affId}`;
+                resultSection.classList.remove('hidden');
+            });
+
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(resultLink.value).then(() => {
+                    const original = copyBtn.textContent;
+                    copyBtn.textContent = 'Đã sao chép!';
+                    setTimeout(() => copyBtn.textContent = original, 1500);
+                });
+            });
+
+            visitBtn.addEventListener('click', () => {
+                if (resultLink.value) {
+                    window.open(resultLink.value, '_blank', 'noopener,noreferrer');
+                }
+            });
+
+            resetBtn.addEventListener('click', () => {
+                productUrlInput.value = '';
+                resultSection.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+
+</html>
