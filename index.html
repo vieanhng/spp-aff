@@ -219,8 +219,14 @@
             });
 
             visitBtn.addEventListener('click', () => {
-                if (resultLink.value) {
-                    window.open(resultLink.value, '_blank', 'noopener,noreferrer');
+                const link = resultLink.value;
+                if (!link) return;
+
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+                if (isMobile) {
+                    window.location.href = `shopeevn://event?url=${encodeURIComponent(link)}`;
+                } else {
+                    window.open(link, '_blank', 'noopener,noreferrer');
                 }
             });
 
