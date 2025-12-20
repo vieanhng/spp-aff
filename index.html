@@ -219,17 +219,8 @@
             });
 
             visitBtn.addEventListener('click', () => {
-                const link = resultLink.value;
-                if (!link) return;
-
-                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
-                if (isMobile) {
-                    const encodedLink = encodeURIComponent(link);
-                    // Dựa theo guide: shopeevn://reactPath?smtt=9&path=shopee%2FTRANSFER_PAGE&navigate_url="[URL đã được mã hóa]"&tab=buy"utm_source=[theo dõi 1]&utm_medium=[theo dõi 2]&utm_campaign=[theo dõi 3]&utm_content=[theo dõi 4]
-                    const deepLink = `shopeevn://reactPath?smtt=9&path=shopee%2FTRANSFER_PAGE&navigate_url=${encodedLink}&tab=buy&utm_source=affiliate&utm_medium=deeplink&utm_campaign=webgenerate`;
-                    window.location.href = deepLink;
-                } else {
-                    window.open(link, '_blank', 'noopener,noreferrer');
+                if (resultLink.value) {
+                    window.open(resultLink.value, '_blank', 'noopener,noreferrer');
                 }
             });
 
